@@ -1,0 +1,7 @@
+.vs/
+bin/
+obj/
+publish/
+Releases/
+*.user
+_backup_v1/

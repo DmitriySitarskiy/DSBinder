@@ -1,0 +1,234 @@
+<Window x:Class="DSBinder.AddBindWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctl="clr-namespace:DSBinder.Controls"
+        Title="Бінд"
+        Width="640" Height="760" MinWidth="560" MinHeight="560"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" ResizeMode="CanResize"
+        Background="{StaticResource BgBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="{StaticResource UiFont}" FontSize="13"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+        PreviewKeyDown="Window_PreviewKeyDown" KeyDown="Window_KeyDown">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="56" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Border BorderBrush="{StaticResource LineStrongBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок -->
+            <Grid Grid.Row="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="24,0,0,0">
+                    <Border Width="30" Height="30" CornerRadius="8" Background="{StaticResource AccentSoftBrush}">
+                        <TextBlock x:Name="TitleIcon" Text="&#xE710;" Style="{StaticResource Icon}" FontSize="14"
+                                   Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center"/>
+                    </Border>
+                    <TextBlock x:Name="TitleText" Text="Новий бінд" FontSize="17" FontWeight="Bold"
+                               VerticalAlignment="Center" Margin="12,0,0,0"/>
+                </StackPanel>
+                <Button Style="{StaticResource Btn.WindowClose}" Content="&#xE8BB;" HorizontalAlignment="Right"
+                        VerticalAlignment="Top" Height="44" Click="Cancel_Click" ToolTip="Закрити (Esc)"/>
+            </Grid>
+
+            <!-- Вміст -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                          Padding="24,6,18,20" Focusable="False">
+                <StackPanel>
+
+                    <!-- Назва -->
+                    <TextBlock Text="НАЗВА" Style="{StaticResource FieldLabel}"/>
+                    <TextBox x:Name="NameBox" Tag="Наприклад: Показати посвідчення" MaxLength="80"/>
+
+                    <!-- Клавіша + категорія -->
+                    <Grid Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="КЛАВІША" Style="{StaticResource FieldLabel}"/>
+                            <ctl:HotkeyBox x:Name="KeyBox" EmptyText="Клацніть і натисніть клавішу"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="КАТЕГОРІЯ" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="CategoryBox" Tag="Загальне" MaxLength="40"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="KeyWarning" Grid.Column="0" FontSize="12" TextWrapping="Wrap"
+                                   Foreground="{StaticResource DangerBrush}" Visibility="Collapsed"/>
+                        <WrapPanel x:Name="CategorySuggestions" Grid.Column="2"/>
+                    </Grid>
+
+                    <!-- Тип -->
+                    <TextBlock Text="ТИП БІНДУ" Style="{StaticResource FieldLabel}" Margin="0,14,0,6"/>
+                    <Border Style="{StaticResource SegmentHost}">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="TypeText" Style="{StaticResource Segment}" GroupName="BindType"
+                                         IsChecked="True" Checked="Type_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE8BD;" Style="{StaticResource Icon}" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Текст / відіграш"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton x:Name="TypeImage" Style="{StaticResource Segment}" GroupName="BindType"
+                                         Checked="Type_Checked">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xEB9F;" Style="{StaticResource Icon}" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Картинка"/>
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Текстовий бінд -->
+                    <StackPanel x:Name="TextPanel" Margin="0,18,0,0">
+                        <Grid>
+                            <TextBlock Text="ПОВІДОМЛЕННЯ" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="LineCounter" Text="0 повідомлень" FontSize="12"
+                                       Foreground="{StaticResource TextDimBrush}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <TextBox x:Name="CommandBox" AcceptsReturn="True" AcceptsTab="False" TextWrapping="Wrap"
+                                 MinHeight="160" MaxHeight="300" VerticalContentAlignment="Top"
+                                 VerticalScrollBarVisibility="Auto"
+                                 FontFamily="{StaticResource MonoFont}" FontSize="13"
+                                 Tag="/me дістав посвідчення з кишені&#10;/do Посвідчення в руці.&#10;{wait:1500}&#10;Доброго дня, шериф округу Блейн."
+                                 TextChanged="CommandBox_TextChanged"/>
+                        <TextBlock Style="{StaticResource Muted}" FontSize="12" Margin="0,8,0,0">
+                            <Run Text="Кожен рядок — окреме повідомлення в чат. Додаткова пауза:"/>
+                            <Run Text="{}{wait:1500}" FontFamily="{StaticResource MonoFont}" Foreground="{StaticResource AccentBrush}"/>
+                        </TextBlock>
+
+                        <Border Style="{StaticResource Card}" Padding="16,6" Margin="0,14,0,0">
+                            <StackPanel>
+                                <Grid Margin="0,10">
+                                    <StackPanel Margin="0,0,70,0">
+                                        <TextBlock Text="Відкривати чат" Style="{StaticResource SettingTitle}"/>
+                                        <TextBlock x:Name="OpenChatDesc" Text="Перед рядком натискається клавіша чату" Style="{StaticResource SettingDesc}"/>
+                                    </StackPanel>
+                                    <CheckBox x:Name="OpenChatSwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="True"/>
+                                </Grid>
+                                <Border Height="1" Background="{StaticResource LineBrush}"/>
+                                <Grid Margin="0,10">
+                                    <StackPanel Margin="0,0,70,0">
+                                        <TextBlock Text="Надсилати (Enter)" Style="{StaticResource SettingTitle}"/>
+                                        <TextBlock Text="Вимкніть, якщо хочете дописати текст вручну перед відправкою" Style="{StaticResource SettingDesc}"/>
+                                    </StackPanel>
+                                    <CheckBox x:Name="PressEnterSwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="True"/>
+                                </Grid>
+                                <Border Height="1" Background="{StaticResource LineBrush}"/>
+                                <Grid Margin="0,10">
+                                    <StackPanel Margin="0,0,130,0">
+                                        <TextBlock Text="Пауза між повідомленнями" Style="{StaticResource SettingTitle}"/>
+                                        <TextBlock x:Name="DelayHint" Text="Більшість серверів мають антифлуд — рекомендовано 1000 мс і більше"
+                                                   Style="{StaticResource SettingDesc}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBox x:Name="DelayBox" Width="80" TextAlignment="Right" MaxLength="5"
+                                                 PreviewTextInput="Digits_PreviewTextInput" TextChanged="DelayBox_TextChanged"/>
+                                        <TextBlock Text="мс" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Картинка -->
+                    <StackPanel x:Name="ImagePanel" Margin="0,18,0,0" Visibility="Collapsed">
+                        <TextBlock Text="ПОСИЛАННЯ АБО ФАЙЛ" Style="{StaticResource FieldLabel}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="ImageBox" Tag="https://… або C:\Картинки\кодекс.png" TextChanged="ImageBox_TextChanged"/>
+                            <Button Grid.Column="1" Style="{StaticResource Btn.Secondary}" Margin="8,0,0,0" Click="Browse_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE8B7;" Style="{StaticResource Icon}" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Огляд…"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <Border Margin="0,12,0,0" Height="200" CornerRadius="10" Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="6">
+                            <Grid>
+                                <TextBlock x:Name="PreviewStatus" Text="Тут з'явиться попередній перегляд"
+                                           Foreground="{StaticResource TextDimBrush}" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+                                <Image x:Name="PreviewImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            </Grid>
+                        </Border>
+
+                        <Grid Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Прозорість" Style="{StaticResource SettingTitle}" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                            <Slider x:Name="ImageOpacitySlider" Grid.Column="1" Minimum="0.2" Maximum="1" Value="0.95"
+                                    ValueChanged="ImageOpacitySlider_ValueChanged"/>
+                            <TextBlock x:Name="ImageOpacityText" Grid.Column="2" Text="95%" HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" Foreground="{StaticResource TextMutedBrush}"/>
+                        </Grid>
+                        <TextBlock Style="{StaticResource Muted}" FontSize="12" Margin="0,10,0,0"
+                                   Text="Натисніть клавішу бінду в грі, щоб показати або сховати картинку. Положення й розмір налаштовуються в режимі редагування оверлею."/>
+                    </StackPanel>
+
+                    <!-- Спільні опції -->
+                    <Border Style="{StaticResource Card}" Padding="16,6" Margin="0,14,0,0">
+                        <StackPanel>
+                            <Grid Margin="0,10">
+                                <StackPanel Margin="0,0,70,0">
+                                    <TextBlock Text="Блокувати клавішу в грі" Style="{StaticResource SettingTitle}"/>
+                                    <TextBlock Text="Гра не отримає це натискання (персонаж не зробить дію, закріплену за клавішею)" Style="{StaticResource SettingDesc}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="SuppressSwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="True"/>
+                            </Grid>
+                            <Border Height="1" Background="{StaticResource LineBrush}"/>
+                            <Grid Margin="0,10">
+                                <StackPanel Margin="0,0,70,0">
+                                    <TextBlock Text="Показувати в оверлеї" Style="{StaticResource SettingTitle}"/>
+                                    <TextBlock Text="Бінд буде у списку-підказці поверх гри" Style="{StaticResource SettingDesc}"/>
+                                </StackPanel>
+                                <CheckBox x:Name="OverlaySwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="True"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Футер -->
+            <Border Grid.Row="2" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource LineBrush}"
+                    BorderThickness="0,1,0,0" Padding="24,14">
+                <Grid>
+                    <TextBlock Text="Ctrl+Enter — зберегти · Esc — скасувати" FontSize="12"
+                               Foreground="{StaticResource TextDimBrush}" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Скасувати" Style="{StaticResource Btn.Secondary}" Click="Cancel_Click" Margin="0,0,10,0"/>
+                        <Button Style="{StaticResource Btn.Primary}" Click="Save_Click" Padding="20,9">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE74E;" Style="{StaticResource Icon}" Margin="0,0,8,0"/>
+                                <TextBlock Text="Зберегти"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

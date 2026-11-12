@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<!-- WinForms Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±ÐµÐ½ Ð»Ð¸ÑˆÐµ Ð´Ð»Ñ Ñ–ÐºÐ¾Ð½ÐºÐ¸ Ð² Ñ‚Ñ€ÐµÑ— (NotifyIcon) -->
+		<UseWindowsForms>true</UseWindowsForms>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon>Assets\DSBinder.ico</ApplicationIcon>
+		<AssemblyName>DSBinder</AssemblyName>
+		<RootNamespace>DSBinder</RootNamespace>
+		<!-- Ð’Ð»Ð°ÑÐ½Ð¸Ð¹ Main (Ð¿Ð¾Ñ‚Ñ€Ñ–Ð±ÐµÐ½ Velopack) -->
+		<StartupObject>DSBinder.App</StartupObject>
+
+		<!-- Ð’Ð•Ð Ð¡Ð†Ð¯: Ð·Ð¼Ñ–Ð½ÑŽÑ”Ñ‚ÑŒÑÑ ÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ð¼ release.ps1 -->
+		<Version>2.0.1</Version>
+		<Product>DSBinder</Product>
+		<Description>Ð‘Ñ–Ð½Ð´ÐµÑ€ Ð´Ð»Ñ GTA 5 RP</Description>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	</PropertyGroup>
+
+	<!-- Velopack Ð²Ð¸Ð¼Ð°Ð³Ð°Ñ” Ð²Ð»Ð°ÑÐ½Ð¸Ð¹ Main: App.xaml ÐºÐ¾Ð¼Ð¿Ñ–Ð»ÑŽÑ”Ñ‚ÑŒÑÑ ÑÐº Ð·Ð²Ð¸Ñ‡Ð°Ð¹Ð½Ð° ÑÑ‚Ð¾Ñ€Ñ–Ð½ÐºÐ° -->
+	<ItemGroup>
+		<ApplicationDefinition Remove="App.xaml" />
+		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Velopack" Version="1.2.161" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Assets\DSBinder.ico" />
+	</ItemGroup>
+
+	<!-- ÐŸÑ€Ð¸Ð±Ð¸Ñ€Ð°Ñ”Ð¼Ð¾ Ð½ÐµÑÐ²Ð½Ñ– using-Ð¸ WinForms/Drawing, Ñ‰Ð¾Ð± Ð½Ðµ Ð±ÑƒÐ»Ð¾ ÐºÐ¾Ð½Ñ„Ð»Ñ–ÐºÑ‚Ñ–Ð² Ð· WPF -->
+	<ItemGroup>
+		<Using Remove="System.Windows.Forms" />
+		<Using Remove="System.Drawing" />
+	</ItemGroup>
+
+</Project>
